@@ -1,5 +1,8 @@
-x = [2 3 4 5 6; 1 2 3 4 5; 2 3 4 5 6]
-x'
-x * x'
- eye(3,3)
- eye(size(x * x'))
+x = load('dataset1_inputs.txt');
+t = load('dataset1_outputs.txt');
+loss_rlm = zeros(20,1);
+for i = 1:20
+    w = rlm_w(x, t, 20, -i);
+    loss_rlm(i) = q_loss(w, x, t);
+end
+loss_rlm

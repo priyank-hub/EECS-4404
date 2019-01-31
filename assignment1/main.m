@@ -23,11 +23,10 @@ pause;
 % squares regression on the data and plot the empirical loss as a function
 % of i. compare ERM and RLM
 loss_rlm = zeros(20,1);
-for ln_lambda = -1:-20
-    w = rlm_w(x, t, 20, ln_lambda)
-    loss_rlm(d) = q_loss(w, x, t);
+for i = 1:20
+    w = rlm_w(x, t, 20, -i);
+    loss_rlm(i) = q_loss(w, x, t);
 end
-loss_rlm
 plot(loss_rlm);
 title('RLM');
 ylabel('empirical square loss l');
