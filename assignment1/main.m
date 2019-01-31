@@ -46,4 +46,6 @@ fprintf("step3.2: Finish compare ERM and RLM, please press enter to continue!\n"
 pause;
 clc; close all;
 
-% STEP 4 cross vailidation 
+% STEP 4 cross vailidation
+rank_data = cross(x,y);
+
