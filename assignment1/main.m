@@ -3,7 +3,8 @@ clc;clear;close all;
 % STEP 1 load data
 [x, t] = load_data;
 fprintf("step1: Finish load data and plot, please press enter to continue!\n")
-pause;
+pause
+clc;close all;
 
 % STEP 2 minimizer of the empirical risk (ERM). compute the empirical square 
 % loss (Loss) on the data and plot it as a function of degree W
@@ -18,6 +19,7 @@ ylabel('empirical square loss l');
 xlabel('degree W');
 fprintf("step2: Finish compute and plot empirical square loss on the data, please press enter to continue!\n")
 pause;
+clc;close all;
 
 % STEP 3 minimizer of the regularized risk (RLM). compute regularized least
 % squares regression on the data and plot the empirical loss as a function
@@ -42,3 +44,6 @@ ylabel('empirical square loss l');
 xlabel('d/i');
 fprintf("step3.2: Finish compare ERM and RLM, please press enter to continue!\n")
 pause;
+clc; close all;
+
+% STEP 4 cross vailidation 
