@@ -31,5 +31,14 @@ plot(loss_rlm);
 title('RLM');
 ylabel('empirical square loss l');
 xlabel('degree W');
-fprintf("step3: Finish compute and plot empirical square loss on the data, please press enter to continue!\n")
+fprintf("step3.1: Finish compute and plot empirical square loss on the data, please press enter to continue!\n")
+pause;
+plot(loss_erm);
+hold on
+plot(loss_rlm);
+legend('EMR', 'RLM');
+title('ERM v.s RLM');
+ylabel('empirical square loss l');
+xlabel('d/i');
+fprintf("step3.2: Finish compare ERM and RLM, please press enter to continue!\n")
 pause;
