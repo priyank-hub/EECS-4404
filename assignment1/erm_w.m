@@ -1,4 +1,4 @@
-function w = ERM(x, t, d)
+function w = erm_w(x, t, d)
 x = load('dataset1_inputs.txt');
 t = load('dataset1_outputs.txt');
 N = size(x, 1);

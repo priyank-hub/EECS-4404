@@ -1,4 +1,4 @@
-function Loss = q_loss_func(w, x, t)
+function Loss = q_loss (w, x, t)
 N = size(x,1);
 Loss = 0;
 for i = 1:N
