@@ -1,5 +1,12 @@
-function w = erm_w(x, t, d)
+function w = rlm_w(x, t, d, ln_lambda)
+% clc;clear;close all;
+% x = load('dataset1_inputs.txt');
+% t = load('dataset1_outputs.txt');
 N = size(x, 1);
+% d = 2;
+% ln_lambda = -2
+lambda = exp(ln_lambda);
+
 % design matrix X of the data, 
 % where N is size of the data and d is degree of poly
 % |x1^0 x1^1 ... x1^d|
@@ -16,7 +23,8 @@ end
 % first column would be constant
 X = [ones(N,1), X];
 
-% vector w that solves the unregularized least squares linear regression problem
-% ERM solution w = (X'*X)^-1 * X' * t from slide,
+Id = eye(size(X' * X));
+% vector w that solves the regularized least squares linear regression problem
+% RLM solution w = (X'*X+lambda*Id)^-1 * X' * t from slide,
 % where X is design matrix of the data
-w = (X' * X)^-1 * X' * t;
+w = (X' * X + lambda * Id)^-1 * X' * t;
