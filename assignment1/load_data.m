@@ -1,7 +1,9 @@
-function [x, t] = load_data()
+function [x, t] = load_data(a)
 % Load Data
-input = load('dataset1_inputs.txt');
-output = load('dataset1_outputs.txt');
+% input = load('dataset1_inputs.txt');
+% output = load('dataset1_outputs.txt');
+input = load(a(1));
+output = load(a(2));
 x = input(:, 1); t = output(:, 1);
 m = length(t); % number of training examples
 

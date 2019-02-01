@@ -1,7 +1,7 @@
 clc;clear;close all;
 
 % STEP 1 load data
-[x, t] = load_data;
+[x, t] = load_data(["dataset1_inputs.txt","dataset1_outputs.txt"]);
 fprintf("step1: Finish load data and plot, please press enter to continue!\n")
 pause
 clc;close all;
@@ -101,7 +101,8 @@ fprintf("step5: Finish visualization with ERM and RLM, please press enter to con
 pause;
 clc;close all;
 
-
+% STEP 6 bonus
+[x_b,t_b] = load_data(["dataset2_inputs.txt","dataset2_outputs.txt"]);
 
 
 
