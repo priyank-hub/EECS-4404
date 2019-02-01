@@ -2,6 +2,7 @@ clc;clear;close all;
 
 [x_b,t_b] = load_data(["dataset2_inputs.txt","dataset2_outputs.txt"]);
 [training, testing] = cross(x_b, t_b, 10);
+concat = horzcat(x_b,t_b);
 loss_rlm = zeros(25,1);
 w_b = zeros(25,21);
 for i = 1:25
