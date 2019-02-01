@@ -46,6 +46,18 @@ fprintf("step3.2: Finish compare ERM and RLM, please press enter to continue!\n"
 pause;
 clc; close all;
 
-% STEP 4 cross vailidation
-rank_data = cross(x,y);
-
+% STEP 4 cross vailidation. Implement 10-fold cross validation for ERM.
+[training, testing] = cross(x, t, 10);
+loss_cross_val = zeros(20,1);
+for d = 1:20
+    w = erm_w(training(:,1), training(:,2), d);
+    %loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
+    loss_cross_val(d) = q_loss(w, testing(:,1), testing(:,2));
+end
+plot(loss_cross_val);
+title('cross vailidation for ERM');
+ylabel('empirical square loss l');
+xlabel('degree W');
+fprintf("step4: Finish cross vailidation and plot empirical square loss on the data, please press enter to continue!\n")
+pause;
+clc;close all;
