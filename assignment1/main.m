@@ -61,3 +61,48 @@ xlabel('degree W');
 fprintf("step4: Finish cross vailidation and plot empirical square loss on the data, please press enter to continue!\n")
 pause;
 clc;close all;
+
+% STEP 5 visualization. 
+% init some setting
+degrees = [1 5 10 20];
+interval = -1.05:0.01:1.05;
+label = string(zeros(2*length(degrees)+1,1));
+
+% plot the data along with the ERM learned models
+hold on
+for d = degrees
+    w_erm_vis = erm_w(x, t, d);
+    plot(interval,func(w_erm_vis,interval));
+end
+% plot the data along with the RLM learned models
+for d = [1 5 10 20]
+    w_rlm_vis = rlm_w(x, t, 20, log(0.001));
+    plot(interval,func(w_rlm_vis,interval));
+end
+% plot origin dataset
+plot(x,t,'rx');
+
+% load labels
+n = 1;
+for i = degrees
+    label(n) = ("W = " +num2str(i)+" (ERM)");
+    n = n + 1;
+end
+for i = degrees
+    label(n) = ("W = " +num2str(i)+" (RLM)");
+    n = n + 1;
+end
+label(n) = "datapoints";
+title('Visualization ERM vs RLM vs OriginDataPoints');
+ylabel('outputs t');
+xlabel('inputs x');
+legend(label');
+fprintf("step5: Finish visualization with ERM and RLM, please press enter to continue!\n")
+pause;
+clc;close all;
+
+
+
+
+
+
