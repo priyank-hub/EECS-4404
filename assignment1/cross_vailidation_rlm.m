@@ -1,11 +1,11 @@
-function avg_loss = cross_vailidation(x,t,degree,fold)
+function avg_loss = cross_vailidation_rlm(rank_data,degree,lambdaln_lambda,fold)
 
-% concat pair of inputs and outputs
-concat = horzcat(x,t);
-
-% rank data randomly
-rowrank = randperm(size(concat, 1));
-rank_data = concat(rowrank, :);
+% % concat pair of inputs and outputs
+% concat = horzcat(x,t);
+% 
+% % rank data randomly
+% rowrank = randperm(size(concat, 1));
+% rank_data = concat(rowrank, :);
 
 chunck = size(rank_data,1)/fold; % the number of times of testing
 tot_loss = 0; % init total loss
@@ -21,7 +21,7 @@ for i = 1:fold
     training = rank_data(~ismember(rank_data,testing,'rows'),:);
     
     % training our model
-    w = erm_w(training(:,1), training(:,2), degree);
+    w = rlm_w(training(:,1), training(:,2), degree, lambdaln_lambda);
     
     % compute the total loss
     tot_loss = tot_loss + q_loss(w, testing(:,1), testing(:,2));

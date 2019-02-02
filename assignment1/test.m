@@ -1,10 +1,35 @@
 clc;clear;close all;
 
 % [x_b,t_b] = load_data(["dataset2_inputs.txt","dataset2_outputs.txt"]);
-x_b = load("dataset2_inputs.txt");
-t_b = load("dataset2_outputs.txt");
+% x_b = load("dataset2_inputs.txt");
+% t_b = load("dataset2_outputs.txt");
+x = load("dataset1_inputs.txt");
+t = load("dataset1_outputs.txt");
+% 
+% [training, testing] = cross(x, t, 10);
+% loss_cross_val_1 = zeros(20,1);
+% for d = 1:20
+%     w = erm_w(training(:,1), training(:,2), d);
+%     %loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
+%     loss_cross_val_1(d) = q_loss(w, testing(:,1), testing(:,2));
+% %       loss_cross_val(d) = cross_vailidation(x,t,d,fold);
+% end
+% 
+% 
+% 
+% loss_cross_val = zeros(20,1);
+% fold = 10;
+% for d = 1:20
+% %     w = erm_w(training(:,1), training(:,2), d);
+% %     %loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
+% %     loss_cross_val(d) = q_loss(w, testing(:,1), testing(:,2));
+%       loss_cross_val(d) = cross_vailidation(x,t,d,fold);
+% end
+% hold on
+% plot(loss_cross_val_1,'g');
+% plot(loss_cross_val,'r');
 
-avg_loss = cross_vailidation(x_b,t_b,5,10);
+
 % d = 5;
 % fold = 10;
 % 
@@ -72,4 +97,43 @@ avg_loss = cross_vailidation(x_b,t_b,5,10);
 % ylabel('empirical square loss l');
 % xlabel('degree W');
 
+% concat pair of inputs and outputs
+concat = horzcat(x,t);
 
+% rank data randomly
+rowrank = randperm(size(concat, 1));
+rank_data = concat(rowrank, :);
+
+loss_cross_val = zeros(20,1);
+fold = 10;
+for d = 1:20
+%     w = erm_w(training(:,1), training(:,2), d);
+%     loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
+%     loss_cross_val(d) = q_loss(w, testing(:,1), testing(:,2));
+      
+%     loss_cross_val(d) = cross_vailidation(x,t,d,fold);
+    
+      loss_cross_val(d) = cross_vailidation_erm(rank_data,d,fold);
+end
+
+% Normalization for loss
+loss_cross_val = loss_cross_val/max(loss_cross_val);
+
+% plot the loss_cross_val graph with degree W
+plot(loss_cross_val);
+
+% for d = 1:20
+% %     w = erm_w(training(:,1), training(:,2), d);
+% %     loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
+% %     loss_cross_val(d) = q_loss(w, testing(:,1), testing(:,2));
+%       
+% %     loss_cross_val(d) = cross_vailidation(x,t,d,fold);
+%     
+%       loss_cross_val(d) = cross_vailidation_rlm(rank_data,d,0.001,fold);
+% end
+% 
+% % Normalization for loss
+% loss_cross_val = loss_cross_val/max(loss_cross_val);
+% 
+% % plot the loss_cross_val graph with degree W
+% plot(loss_cross_val);
