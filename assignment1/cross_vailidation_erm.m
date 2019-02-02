@@ -1,12 +1,5 @@
 function avg_loss = cross_vailidation_erm(rank_data,degree,fold)
 
-% % concat pair of inputs and outputs
-% concat = horzcat(x,t);
-% 
-% % rank data randomly
-% rowrank = randperm(size(concat, 1));
-% rank_data = concat(rowrank, :);
-
 chunck = size(rank_data,1)/fold; % the number of times of testing
 tot_loss = 0; % init total loss
 for i = 1:fold

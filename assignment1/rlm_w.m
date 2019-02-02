@@ -27,4 +27,6 @@ Id = eye(size(X' * X));
 % vector w that solves the regularized least squares linear regression problem
 % RLM solution w = (X'*X+lambda*Id)^-1 * X' * t from slide,
 % where X is design matrix of the data
-w = (X' * X + lambda * Id)^-1 * X' * t;
+% w = (X' * X + lambda * Id)^-1 * X' * t;
+w = pinv(X' * X + lambda * Id) * X' * t;
+

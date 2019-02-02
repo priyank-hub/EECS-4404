@@ -146,8 +146,27 @@ pause;
 clc;close all;
 
 % STEP 6 bonus
-[x_b,t_b] = load_data(["dataset2_inputs.txt","dataset2_outputs.txt"]);
+x_b = load("dataset2_inputs.txt");
+t_b = load("dataset2_outputs.txt");
+interval = -1:0.01:1.25;
 
+[opt_w, min_loss] = train_6(x_b,t_b);
+for i = 1:5
+    [w,l] = train_6(x_b,t_b);
+    if l < min_loss 
+        min_loss = l;
+        opt_w = w;
+    end
+end
 
-
+plot(interval,func(opt_w,interval));
+hold on
+plot(x_b,t_b,'rx');
+title('Visualization Model vs OriginDataPoints');
+ylabel('outputs t');
+xlabel('inputs x');
+save('opt_w_s6.txt','opt_w');
+fprintf("step6: Finish training model, please press enter to continue!\n")
+pause;
+clc;close all;
 

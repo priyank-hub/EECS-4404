@@ -1,139 +1,120 @@
 clc;clear;close all;
 
-% [x_b,t_b] = load_data(["dataset2_inputs.txt","dataset2_outputs.txt"]);
+% % [x_b,t_b] = load_data(["dataset2_inputs.txt","dataset2_outputs.txt"]);
 % x_b = load("dataset2_inputs.txt");
 % t_b = load("dataset2_outputs.txt");
-x = load("dataset1_inputs.txt");
-t = load("dataset1_outputs.txt");
-% 
-% [training, testing] = cross(x, t, 10);
-% loss_cross_val_1 = zeros(20,1);
-% for d = 1:20
-%     w = erm_w(training(:,1), training(:,2), d);
-%     %loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
-%     loss_cross_val_1(d) = q_loss(w, testing(:,1), testing(:,2));
-% %       loss_cross_val(d) = cross_vailidation(x,t,d,fold);
-% end
-% 
-% 
-% 
-% loss_cross_val = zeros(20,1);
-% fold = 10;
-% for d = 1:20
-% %     w = erm_w(training(:,1), training(:,2), d);
-% %     %loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
-% %     loss_cross_val(d) = q_loss(w, testing(:,1), testing(:,2));
-%       loss_cross_val(d) = cross_vailidation(x,t,d,fold);
-% end
-% hold on
-% plot(loss_cross_val_1,'g');
-% plot(loss_cross_val,'r');
-
-
-% d = 5;
-% fold = 10;
-% 
-% %[training, testing] = cross(x_b, t_b, 10);
-% % x_b = [1 3 3 4 5 6 7 8 9 10];
-% % x_b=x_b';
-% % t_b = [11 12 13 14 15 16 17 18 19 20];
-% % t_b=t_b';
+% %concat pair of inputs and outputs
 % concat = horzcat(x_b,t_b);
+% 
+% % rank data randomly
 % rowrank = randperm(size(concat, 1));
 % rank_data = concat(rowrank, :);
 % 
+% % init some para.
+% loss_cross_val = zeros(20,1);
+% fold = 10;
 % chunck = size(rank_data,1)/fold; % the number of times of testing
-% training = zeros((fold-1) * chunck, 2); % init size of training
-% testing = zeros(chunck, 2); % init size of testing
-% loss = 0;
-% for i = 1:fold
-%     n=1;
-%     testing = zeros(chunck, 2);
-%     % load testing set
-%     for j = 1+(i-1)*chunck:i*chunck
-%         testing(n,:) = rank_data(j,:);
-%         n=n+1;
+% min_loss = inf;
+% 
+% % compute loss with cross vailidation, which is with each degree W
+% loss = zeros(1,fold);
+% for degree = 1:20
+%     w = zeros(degree+1,fold);
+%     for i = 1:fold
+%         n=1;
+%         testing = zeros(chunck, 2);
+%         % load testing set
+%         for j = 1+(i-1)*chunck : i*chunck
+%             testing(n,:) = rank_data(j,:);
+%             n=n+1;
+%         end
+%         % load remaining rank_data for training set
+%         training = rank_data(~ismember(rank_data,testing,'rows'),:);
+%         
+%         % training our model
+%         w(:,i) = erm_w(training(:,1), training(:,2), degree);
+%         
+%         % compute the total loss
+%         loss(:,i) = q_loss(w(:,i), testing(:,1), testing(:,2));
+%         
+% %         n = 1;
+% %         loss_rlm = zeros(1,20);
+% %         w_rlm = zeros(degree+1,20);
+% %         for ln_lambda = 1:20
+% %             
+% %             % training our model
+% %             w_rlm(:,n) = rlm_w(training(:,1), training(:,2), degree, -ln_lambda);
+% %             
+% %             % compute the total loss
+% %             loss_rlm(:,n) = q_loss(w_rlm(:,n), testing(:,1), testing(:,2));
+% %             n=n+1;
+% %         end
+% %         if min(loss_rlm) < min_loss
+% %             min_loss = min(loss_rlm);
+% %             index = find(loss_rlm==min(loss_rlm));
+% %             opt_w = w_rlm(:,index);
+% %             flag="RLM";
+% %         end
+%         
 %     end
-%     % load remaining rank_data for training set
-%     training = rank_data(~ismember(rank_data,testing,'rows'),:);
-%     
-%     % training our model
-%     w = erm_w(training(:,1), training(:,2), d);
-%     
-%     % compute the total loss
-%     loss = loss + q_loss(w, testing(:,1), testing(:,2));
+%     if min(loss) < min_loss
+%         min_loss = min(loss);
+%         index = find(loss==min(loss));
+%         opt_w = w(:,index);
+%         flag="EMR";
+%     end
 % end
-% loss = loss/fold;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% loss_rlm = zeros(25,1);
-% w_b = zeros(25,21);
-% for i = 1:25
-%     w_b(i,:) = rlm_w(training(:,1), training(:,2), 20, -i);
-%     loss_rlm(i) = q_loss(w_b(i,:), testing(:,1), testing(:,2));
+% w_erm=zeros(21,20);
+% loss_erm=zeros(1,20);
+% w_rlm=zeros(21,20);
+% loss_rlm=zeros(1,20);
+% 
+% for d = 1:20
+%     w_erm(1:d+1,d) = erm_w(x_b, t_b, d);
+%     w_rlm(:,d) = rlm_w(x_b, t_b, 20, -d);
+%     loss_erm(:,d) = q_loss(w_erm(:,d), x_b, t_b);
+%     loss_rlm(:,d) = q_loss(w_rlm(:,d), x_b, t_b);
 % end
-% % interval = -1:0.01:1.1;
-% % hold on;
-% % plot(interval,func(rlm_w(x_b, t_b, 20, -15),interval));
-% % plot(x_b,t_b,'rx');
-% % w
-% plot(loss_rlm);
-% title('RLM');
-% ylabel('empirical square loss l');
-% xlabel('degree W');
+% if min(loss_erm) < min(loss_rlm)
+%         min_loss = min(loss_erm);
+%         index = find(loss_erm==min(loss_erm));
+%         opt_w = w_erm(:,index);
+%         flag="EMR";
+% else
+%         min_loss = min(loss_rlm);
+%         index = find(loss_rlm==min(loss_rlm));
+%         opt_w = w_rlm(:,index);
+%         flag="RLM";
+%         
+% end
+x_b = load("dataset2_inputs.txt");
+t_b = load("dataset2_outputs.txt");
 
-% concat pair of inputs and outputs
-concat = horzcat(x,t);
-
-% rank data randomly
-rowrank = randperm(size(concat, 1));
-rank_data = concat(rowrank, :);
-
-loss_cross_val = zeros(20,1);
-fold = 10;
-for d = 1:20
-%     w = erm_w(training(:,1), training(:,2), d);
-%     loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
-%     loss_cross_val(d) = q_loss(w, testing(:,1), testing(:,2));
-      
-%     loss_cross_val(d) = cross_vailidation(x,t,d,fold);
-    
-      loss_cross_val(d) = cross_vailidation_erm(rank_data,d,fold);
+[opt_w, min_loss] = train_6(x_b,t_b);
+for i = 1:5
+    [w,l] = train_6(x_b,t_b);
+    if l < min_loss 
+        min_loss = l;
+        opt_w = w;
+    end
 end
 
-% Normalization for loss
-loss_cross_val = loss_cross_val/max(loss_cross_val);
+% flag
+degree=size(opt_w,1)
+interval = -1:0.01:1.25;
+opt_w_a = [0.6006;1.1576;-11.8218;9.7903;33.6301;-27.3195;-22.0138;16.8897];
 
-% plot the loss_cross_val graph with degree W
-plot(loss_cross_val);
+p = polyfit(x_b,t_b,8);
+plot(interval,polyval(p,interval));
+hold on
+plot(interval,func(opt_w,interval));
 
-% for d = 1:20
-% %     w = erm_w(training(:,1), training(:,2), d);
-% %     loss_cross_val(d) = q_loss(w, training(:,1), training(:,2));
-% %     loss_cross_val(d) = q_loss(w, testing(:,1), testing(:,2));
-%       
-% %     loss_cross_val(d) = cross_vailidation(x,t,d,fold);
-%     
-%       loss_cross_val(d) = cross_vailidation_rlm(rank_data,d,0.001,fold);
-% end
-% 
-% % Normalization for loss
-% loss_cross_val = loss_cross_val/max(loss_cross_val);
-% 
-% % plot the loss_cross_val graph with degree W
-% plot(loss_cross_val);
+plot(interval,func(opt_w_a,interval));
+legend("fit","w","w_a");
+plot(x_b,t_b,'rx');
+
+% x = [1 2;2 2;3 2;1 2;5 2;3 6;4 7]
+% b = [1;0;0;0;0;1;1];
+% a = x==min(x(1,:))
+% c=x(a,:)

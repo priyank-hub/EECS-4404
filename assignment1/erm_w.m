@@ -19,4 +19,5 @@ X = [ones(N,1), X];
 % vector w that solves the unregularized least squares linear regression problem
 % ERM solution w = (X'*X)^-1 * X' * t from slide,
 % where X is design matrix of the data
-w = (X' * X)^-1 * X' * t;
+% w = (X' * X)^-1 * X' * t;
+w = pinv(X' * X) * X' * t;
