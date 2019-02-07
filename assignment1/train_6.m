@@ -15,7 +15,7 @@ min_loss = inf;
 
 % compute loss with cross vailidation, which is with each degree W
 loss = zeros(1,fold);
-for degree = 1:20
+for degree = 5:9
     w = zeros(degree+1,fold);
     for i = 1:fold
         n=1;
@@ -28,11 +28,11 @@ for degree = 1:20
         % load remaining rank_data for training set
         training = rank_data(~ismember(rank_data,testing,'rows'),:);
         
-        % training our model
-        w(:,i) = erm_w(training(:,1), training(:,2), degree);
-        
-        % compute the total loss
-        loss(:,i) = q_loss(w(:,i), testing(:,1), testing(:,2));
+%         % training our model
+%         w(:,i) = erm_w(training(:,1), training(:,2), degree);
+%         
+%         % compute the total loss
+%         loss(:,i) = q_loss(w(:,i), testing(:,1), testing(:,2));
         
         n = 1;
         loss_rlm = zeros(1,20);
@@ -54,10 +54,10 @@ for degree = 1:20
         end
         
     end
-    if min(loss) < min_loss
-        min_loss = min(loss);
-        index = loss==min(loss);
-        opt_w = w(:,index);
-        %flag="EMR";
-    end
+%     if min(loss) < min_loss
+%         min_loss = min(loss);
+%         index = loss==min(loss);
+%         opt_w = w(:,index);
+%         %flag="EMR";
+%     end
 end

@@ -64,9 +64,9 @@ clc; close all;
 % concat pair of inputs and outputs
 concat = horzcat(x,t);
 
-% rank data randomly
-rowrank = randperm(size(concat, 1));
-rank_data = concat(rowrank, :);
+% % rank data randomly
+% rowrank = randperm(size(concat, 1));
+% rank_data = concat(rowrank, :);
 
 % init some para.
 loss_cross_val = zeros(20,1);
@@ -74,6 +74,10 @@ fold = 10;
 
 % compute loss with cross vailidation, which is with each degree W
 for d = 1:20
+    % rank data randomly
+    rowrank = randperm(size(concat, 1));
+    rank_data = concat(rowrank, :);
+
     loss_cross_val(d) = cross_vailidation_erm(rank_data,d,fold);
 end
 
@@ -158,6 +162,8 @@ for i = 1:5
         opt_w = w;
     end
 end
+
+opt_w
 
 plot(interval,func(opt_w,interval));
 hold on
