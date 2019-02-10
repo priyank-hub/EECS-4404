@@ -9,7 +9,7 @@ m = length(t); % number of training examples
 
 % Plot Data
 fprintf('Plotting Data ...\n');
-plot(x, t, 'rx', 'MarkerSize', 10);
+plot(x, t, 'r.', 'MarkerSize', 10);
 title('Dataset1 Plot');
 ylabel('dataset1_outputs');
 xlabel('dataset1_inputs');

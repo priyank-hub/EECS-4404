@@ -45,7 +45,7 @@ loss_rlm = loss_rlm/max(loss_rlm);
 plot(loss_rlm);
 title('RLM');
 ylabel('empirical square loss l');
-xlabel('degree W');
+xlabel('i (indicate:ln(lambda))');
 fprintf("step3.1: Finish compute and plot empirical square loss on the data, please press enter to continue!\n")
 pause;
 plot(loss_erm);
@@ -54,7 +54,7 @@ plot(loss_rlm);
 legend('EMR', 'RLM');
 title('ERM v.s RLM');
 ylabel('empirical square loss l');
-xlabel('d/i');
+xlabel('W/i');
 fprintf("step3.2: Finish compare ERM and RLM, please press enter to continue!\n")
 pause;
 clc; close all;
@@ -82,7 +82,7 @@ for d = 1:20
 end
 
 % Normalization for loss
-loss_cross_val = loss_cross_val/max(loss_cross_val);
+% loss_cross_val = loss_cross_val/max(loss_cross_val);
 
 % plot the loss_cross_val graph with degree W
 plot(loss_cross_val);
