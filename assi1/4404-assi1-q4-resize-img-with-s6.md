@@ -42,7 +42,7 @@ we can compare two figures, ERM fits data very well as larger degree, but there 
 
 ### Step 6 - bonus
 
-We can repeate step 1 - step 5, and consider choose more suitable degree $W$, nerrow down from $\{1, 2, .., 20\}$ to $\{5, 6, .., 9\} $, use `train_6.m` with cross validation to find minimum loss and avoid overfitting as possible. Call this function repeatedly to choose minimum loss, and plot the fitting curves and original data to compare. From this step, we can analyze figures to choose ERM or RLM so that avoid overfitting. We found RLM is more suitable, so we change a routine in `train_6.m`, just training our model with RLM, and find minimum loss and output the most suitable degree $W​$.
+Because there is no dataset2 , we just give intuition: we can repeate step 1 - step 5, and consider choose more suitable degree $W$, nerrow down from $\{1, 2, .., 20\}$ to smaller range such as $\{5, 6, .., 9\} $, use `train_6.m` with cross validation to find minimum loss and avoid overfitting as possible. Call this function repeatedly to choose minimum loss, and plot the fitting curves and original data to compare. From this step, we can analyze figures to choose ERM or RLM so that avoid overfitting. We found RLM is more suitable, so we change a routine in `train_6.m`, just training our model with RLM, and find minimum loss and output the most suitable degree $W$.
 
 ## Source Code
 
@@ -331,16 +331,13 @@ function [opt_w,min_loss] = train_6 (x_b,t_b)
 % t_b = load("dataset2_outputs.txt");
 %concat pair of inputs and outputs
 concat = horzcat(x_b,t_b);
-
 % rank data randomly
 rowrank = randperm(size(concat, 1));
 rank_data = concat(rowrank, :);
-
 % init some para.
 fold = 10;
 chunck = size(rank_data,1)/fold; % the number of times of testing
 min_loss = inf;
-
 % compute loss with cross vailidation, which is with each degree W
 loss = zeros(1,fold);
 for degree = 5:9
@@ -356,20 +353,17 @@ for degree = 5:9
         % load remaining rank_data for training set
         training = rank_data(~ismember(rank_data,testing,'rows'),:);
         
-%         % training our model
-%         w(:,i) = erm_w(training(:,1), training(:,2), degree);
-%         
-%         % compute the total loss
-%         loss(:,i) = q_loss(w(:,i), testing(:,1), testing(:,2));
-        
+          % training our model
+          % w(:,i) = erm_w(training(:,1), training(:,2), degree);    
+          % compute the total loss
+          % loss(:,i) = q_loss(w(:,i), testing(:,1), testing(:,2)); 
+          
         n = 1;
         loss_rlm = zeros(1,20);
         w_rlm = zeros(degree+1,20);
         for ln_lambda = 1:20
-            
             % training our model
-            w_rlm(:,n) = rlm_w(training(:,1), training(:,2), degree, -ln_lambda);
-            
+            w_rlm(:,n) = rlm_w(training(:,1), training(:,2), degree, -ln_lambda); 
             % compute the total loss
             loss_rlm(:,n) = q_loss(w_rlm(:,n), testing(:,1), testing(:,2));
             n=n+1;
@@ -380,8 +374,8 @@ for degree = 5:9
             opt_w = w_rlm(:,index);
             %flag="RLM";
         end
-        
     end
+    
 %     if min(loss) < min_loss
 %         min_loss = min(loss);
 %         index = loss==min(loss);
