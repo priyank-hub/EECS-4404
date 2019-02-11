@@ -2,19 +2,19 @@
 
 ### Step 1 - load the data
 
-![data](step-01.png)
+<img src="step-01.png" style="zoom:35%"/>
 
 ### Step 2 - ERM
 
-Plot the empirical square loss on the data with degrees $W = 1, .., 20​$.
+Plot the empirical square loss on the data with degrees $W = 1, .., 20$.
 
-![ERM](step-02.png)
+<img src="step-02.png" style="zoom:35%"/>
 
-Based on the plot, when degree $W > 10​$ the loss would be much less than other dergree. $W = 20​$ has least loss, it is suitable when we do not consider overfit so far.
+Based on the plot, when degree $W > 10$ the loss would be much less than other dergree. $W = 20$ has least loss, it is suitable when we do not consider overfit so far.
 
 ### Step 3 - RLM
 
-![RLM](step-03.png)
+<img src="step-03.png" style="zoom:35%"/>
 
 based on the plot, when degree $W = 20$ and the $ln(\lambda) ={-1,-2,..,-20}$, after $ln(\lambda) < -10$, loss would be much less than other dergree. $ln(\lambda) = -20$ has least loss, it is suitable when we do not consider overfit so far.
 
@@ -22,15 +22,15 @@ based on the plot, when degree $W = 20$ and the $ln(\lambda) ={-1,-2,..,-20}$, a
 
 Note: we nomalize the loss into $(0,1)$, for comparing ERM and RLM
 
-![EMR&RLM](step-03.2.png)
+<img src="step-03.2.png" style="zoom:35%"/>
 
 When degree $W = 20$, $ln(\lambda) ={-1,-2,..,-20}$ to regularize. We can see after regularization, the empirical square loss would be higher than before regularization. Although, the loss is a little bit higher, but it would balance the loss and regularizer, which would avoid the overfitting problem.
 
 ### Step 4 - cross validation
 
-![cross-calidation](step-04.png)
+<img src="step-04.png" style="zoom:35%"/>
 
-![corss validation](step-04.2.png)
+<img src="step-04.2.png" style="zoom:35%"/>
 
 We can see when we use cross validation for ERM, $W = 20$ is not lowest loss yet, because of overfitting degree larger than $10$. Although each time the curves have some difference, the tendency would be same. Thus, $W = 10$ ~ $12$ is suitable after consider the overfitting.
 
@@ -40,9 +40,9 @@ We can see when we use cross validation for ERM, $W = 20$ is not lowest loss yet
 
 we can compare two figures, ERM fits data very well as larger degree, but there is overfitting issue. After regularization, in some degree, it would avoid overfitting when the degree $W$ is larger. Thus, adding regularizer ($\lambda = 0.001$), as $W = 20$ is most suitable.
 
-
-
 ## Source Code
+
+#### Step 1-5
 
 `main.m`
 
