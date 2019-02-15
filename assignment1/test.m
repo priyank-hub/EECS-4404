@@ -103,15 +103,17 @@ end
 % flag
 degree=size(opt_w,1)
 interval = -1:0.01:1.25;
-opt_w_a = [0.6006;1.1576;-11.8218;9.7903;33.6301;-27.3195;-22.0138;16.8897];
+%opt_w_a = [0.6006;1.1576;-11.8218;9.7903;33.6301;-27.3195;-22.0138;16.8897];
+opt_w_a = [0.6475;1.7707;-12.1234;3.5510;33.8691;-9.0258;-21.5690;-2.5581;-0.2307;6.5258;0;0;0;0;0;0;0;0;0;0;0];
 
-p = polyfit(x_b,t_b,8);
-plot(interval,polyval(p,interval));
-hold on
-plot(interval,func(opt_w,interval));
 
+% p = polyfit(x_b,t_b,8);
+% plot(interval,polyval(p,interval));
+% hold on
+% plot(interval,func(opt_w,interval));
 plot(interval,func(opt_w_a,interval));
-legend("fit","w","w_a");
+hold on
+% legend("fit","w","w_a");
 plot(x_b,t_b,'rx');
 
 % x = [1 2;2 2;3 2;1 2;5 2;3 6;4 7]
