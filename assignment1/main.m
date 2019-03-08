@@ -9,7 +9,7 @@ clc;close all;
 % STEP 2 minimizer of the empirical risk (ERM). compute the empirical square 
 % loss (Loss) on the data and plot it as a function of degree W
 loss_erm = zeros(20,1);
-
+ 
 % compute weight with ERM and loss, which is with each degree W
 for d = 1:20
     w = erm_w(x, t, d);
