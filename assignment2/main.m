@@ -55,12 +55,12 @@ D = load('seeds_dataset.txt');
 [N,C] = size(D);
 [D_1, D_2, D_3] = spiltDateset(D);
 num_updates = 220;
-lambda = 100;
+lambda = 0.01;
 binary_losses=zeros(3,1);
 ws = zeros(3,C-1);
 
 
-for i = 1:20
+for i = 1:50
     
     [w_1,hi_loss_1,bi_loss_1] = soft_svm(D_1, num_updates, lambda, 0);
 %     binary_losses(1) = emp_loss(w_1, D_1, 'binary');
