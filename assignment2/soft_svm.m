@@ -34,7 +34,7 @@ for j = 1:T
 end
 
 if(n ~= 0)
-    w = (1/n) * sum(ws((T-n-1:T),:));
+    w = (1/n) * sum(ws((T-n:T),:));
 else
     w = w_j;
 end

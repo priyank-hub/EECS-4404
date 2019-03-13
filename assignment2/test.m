@@ -1,1 +1,3 @@
-clc;clear;close all
+dot(w_1,D(1,1:7))
+dot(w_2,D(1,1:7))
+dot(w_3,D(1,1:7))
