@@ -121,16 +121,16 @@ We know that empirical logistic loss over a dataset
 - Solve:
 
   1. $In: data \ D = ((\pmb{x}_1, t_1), (\pmb{x}_2, t_2), ..., (\pmb{x}_N, t_N))$
-  2. $Parameters: \eta, T$
-  3. $Initialize: w_0 = 0$
+  2. $Parameters: \eta,\ T,\ n$
+  3. $Initialize: w_0 = 0​$
   4. $For\ i = 0, ..., T$
   5. ​                  Choose a random data point $(\pmb{x}^*,t^*)$ form $D$
   6. ​                  so that $\pmb{w}_{i+1} = \pmb{w}_i - \eta * \frac{e^{-t^* <\pmb{w}, \pmb{x}^*>}}{1+exp(-t^* <\pmb{w}, \pmb{x}^*>)} (-t^*\pmb{x}^*)$
-  7. $Output: \pmb{w} = {1 \over T} \sum_{i=1}^T \pmb{w}^i​$
+  7. $Output: \pmb{w} = {1 \over n} \sum_{k=T-n}^T \pmb{w}^k$
 
-  - $T$ is the number of updates
-
-  - $\eta$ is fixed stepsize
+  - $T​$ is the number of updates
+  - $\eta​$ is fixed stepsize
+  - $n​$ compute average of last $n​$ iteration
 
 (c) Compare the derived algorithm to the SGD algorithm we derived for SVM. What is similar? What is different? On what type of data would you expect to see different behavior?
 
@@ -138,13 +138,12 @@ We know that empirical logistic loss over a dataset
   - Similar :
     - The part (b) algrothim and we derived for SVM all use the gradient descent method to update and find the optimal $\pmb{w}$ so that minimize the loss.
     - Both algorithms would sample a data point $(\pmb{w}_i, t_i)$ uniformly at the random from dataset D to compute the gradient to update
-  - Different:
+    - Both algorithms compute the average $\pmb{w}$ of last $n​$ iterations.
+  -  Different:
     - part (b) use fixed stepsize $\eta​$, SVM we derived use stepsize sequence $\eta * j = {1\over \lambda *j}​$ where $j​$ is current step number. It means in SVM, the stepsize would less and less in each step, it would more accuracy to be closed minimum. 
     - Part(b) compute the gradient and SVM compute a subgradient only with respect to one points which can speed up the convergence of SGD
-    - Part(b) consider the logistic loss, but SVM consider the hinge loss
-    - Last step, part(b) compute average over all $\pmb{w}$, SVM just average over partial results
-
-
+    - Part(b) consider the gradient of logistic loss, but SVM consider the gradient of hinge loss.The logistic loss would close to 0, but never be 0; the hinge loss would be 0 if $t_i<\pmb{w},x_i>\ > 1$ ; The gradient of hinge loss function is a piecewise-defined function, but the gradient of logistic loss is comtinuous.
+  - The hinge loss would handle the data where are not differentiable. but logistic loss 
 
 
 

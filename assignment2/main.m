@@ -54,25 +54,26 @@ clc;clear;close all;
 D = load('seeds_dataset.txt');
 [N,C] = size(D);
 [D_1, D_2, D_3] = spiltDateset(D);
-num_updates = 220;
+num_updates = 6000;
 lambda = 0.01;
+n = 1;
 binary_losses=zeros(3,1);
 ws = zeros(3,C-1);
+min_loss = N;
 
 
-for i = 1:50
+for i = 1:30
     
-    [w_1,hi_loss_1,bi_loss_1] = soft_svm(D_1, num_updates, lambda, 0);
+    [w_1,hi_loss_1,bi_loss_1] = soft_svm(D_1, num_updates, lambda, n);
 %     binary_losses(1) = emp_loss(w_1, D_1, 'binary');
     ws(1,:) = w_1;
-    [w_2,hi_loss_2,bi_loss_2] = soft_svm(D_2, num_updates, lambda, 0);
+    [w_2,hi_loss_2,bi_loss_2] = soft_svm(D_2, num_updates, lambda, n);
 %     binary_losses(2) = emp_loss(w_2, D_2, 'binary');
     ws(2,:) = w_2;
-    [w_3,hi_loss_3,bi_loss_3] = soft_svm(D_3, num_updates, lambda, 0);
+    [w_3,hi_loss_3,bi_loss_3] = soft_svm(D_3, num_updates, lambda, n);
 %     binary_losses(3) = emp_loss(w_3, D_3, 'binary');
     ws(3,:) = w_3;
     
-    min_loss = N;
     
     DR = D(:,C);
     for j = 1:N
@@ -85,7 +86,7 @@ for i = 1:50
     loss = sum(Diff)
     
     if (loss < min_loss)
-        min_loss = loss
+        min_loss = loss;
         opt_DR = DR;
         opt_ws = ws;
     end
@@ -95,33 +96,6 @@ for i = 1:50
     
 end
     
-min_loss;    
-%     
-%     figure
-%     title("bi_loss on w_1")
-%     hold on
-%     plot(bi_loss_1, 'Color', 'red'); 
-%     xlabel('Iteration'); 
-%     ylabel('Binary Loss');
-%     hold off
-%     
-%     figure
-%     title("bi_loss on w_2")
-%     hold on
-%     plot(bi_loss_2, 'Color', 'blue'); 
-%     xlabel('Iteration'); 
-%     ylabel('Binary Loss');
-%     hold off
-%     
-%     figure
-%     title("bi_loss on w_3")
-%     hold on
-%     plot(bi_loss_3, 'Color', 'green'); 
-%     xlabel('Iteration'); 
-%     ylabel('Binary Loss');
-%     hold off
-% pause;
-% clc;close all;
-
+min_loss
 
 
