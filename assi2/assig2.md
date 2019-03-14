@@ -138,12 +138,14 @@ We know that empirical logistic loss over a dataset
   - Similar :
     - The part (b) algrothim and we derived for SVM all use the gradient descent method to update and find the optimal $\pmb{w}$ so that minimize the loss.
     - Both algorithms would sample a data point $(\pmb{w}_i, t_i)$ uniformly at the random from dataset D to compute the gradient to update
+    - Both of them are convex optimal problems
     - Both algorithms compute the average $\pmb{w}$ of last $n​$ iterations.
-  -  Different:
-    - part (b) use fixed stepsize $\eta​$, SVM we derived use stepsize sequence $\eta * j = {1\over \lambda *j}​$ where $j​$ is current step number. It means in SVM, the stepsize would less and less in each step, it would more accuracy to be closed minimum. 
-    - Part(b) compute the gradient and SVM compute a subgradient only with respect to one points which can speed up the convergence of SGD
-    - Part(b) consider the gradient of logistic loss, but SVM consider the gradient of hinge loss.The logistic loss would close to 0, but never be 0; the hinge loss would be 0 if $t_i<\pmb{w},x_i>\ > 1$ ; The gradient of hinge loss function is a piecewise-defined function, but the gradient of logistic loss is comtinuous.
-  - The hinge loss would handle the data where are not differentiable. but logistic loss 
+  - Different:
+    - part (b) use fixed stepsize $\eta$, SVM we derived use stepsize sequence $\eta * j = {1\over \lambda *j}$ where $j$ is current step number. It means in SVM, the stepsize would less and less in each step, it would more accuracy to be closed minimum. 
+    - Part(b) consider the gradient of logistic loss, but SVM consider the gradient of hinge loss.The logistic loss would close to 0, but never be 0; the hinge loss would be 0 if $t_i<\pmb{w},x_i>\ > 1$ , it means that the suport vectors would determine the $\pmb{w}$, but Part(b) algrothm points which classify correctlly also effect the $\pmb{w}$. 
+    - soft SVM allows sparse support vectors.
+    - The gradient of hinge loss function is a piecewise-defined function, but the gradient of logistic loss is comtinuous.
+  - The hinge loss would handle the data 
 
 
 
@@ -165,6 +167,7 @@ We know that empirical logistic loss over a dataset
 
 ```matlab
 function [w, hi_loss, bi_loss] = soft_svm(D,T,lambda, n)
+function [w, hi_loss, bi_loss] = soft_svm(D,T,lambda, n)
 % Initialize
 [N, clo] = size(D);
 x = D(:,1:clo-1); % features
@@ -177,14 +180,9 @@ bi_loss = zeros(T,1);
 % store `w` in each iteration
 ws=zeros(T,clo-1);
 
-for j = 1:T
-    
-    % update `w`
-    w_j = (1/(j*lambda))*theta;
-    
-    % store the `w` in `ws`
-    ws(j,:) = w_j;
- 
+w_j = (1/(lambda))*theta; % w_0
+
+for j = 1:T 
     % Choose the i in uniform distribution
     i = unidrnd(N);
     
@@ -194,13 +192,19 @@ for j = 1:T
         
     end
     
+    % update `w`
+    w_j = (1/(j*lambda))*theta;
+    
+    % store the `w` in `ws`
+     ws(j,:) = w_j;
+    
     % Track the emprical and hinge loss
     hi_loss(j,:) = emp_loss(w_j, D, 'hinge');
     bi_loss(j,:) = emp_loss(w_j, D, 'binary');
 end
 
 if(n ~= 0)
-    w = (1/n) * sum(ws((T-n-1:T),:));
+    w = (1/n) * sum(ws((T-n:T),:));
 else
     w = w_j;
 end
@@ -236,6 +240,12 @@ emr_loss = (1/N) * l;
 % and print empiral hinge loss and empiral binary loss
 clc;clear;close all;
 dataset = load_data("bg.txt");
+
+% add bias
+[N,C] = size(dataset);
+bias = ones(N,1);
+dataset = [dataset(:,1:C-1) bias dataset(:,C)];
+
 num_updates = 300;
 s_lambda = [100, 10, 1, .1, .01, .001];
 n = 1;
@@ -261,17 +271,21 @@ for i = 1:length(s_lambda)
     ylabel('EMP Binary Loss');
     hold off
 end
+
+fprintf("part(b): Finished! Please press enter to continue!\n")
+pause;
+clc;close all;
 ```
 
 <img src="./figure/bi_100.png" style="zoom:50%"/>
 
-<img src="./figure/bi_0.1.png" style="zoom:50%"/>
+<img src="./figure/bi_1.png" style="zoom:50%"/>
 
 <img src="./figure/bi_0.001.png" style="zoom:100%"/>
 
 <img src="./figure/hi_100.png" style="zoom:50%"/>
 
-<img src="./figure/hi_0.1.png" style="zoom:100%"/>
+<img src="./figure/hi_1.png" style="zoom:50%"/>
 
 <img src="./figure/hi_0.001.png" style="zoom:100%"/>
 
@@ -280,20 +294,47 @@ end
 (c) Discuss the plots. Are the curves monotone? Are they approximately monotone? Why or why not? How does the choice of $\lambda$ affect the optimization? How would you go about finding a linear predictor of minimal binary loss?
 
 - Solve:
-  - No, the curves are not strictly monotone. Because in each iteration, the SoftSVM pick random data point to compute the subgradient, sometimes, it may pick a noice data point, the loss would larger than previous iteration; sometimes, it may pick a same point as previous iteration, the loss would be 0. Thus, it not monotone.
-  - Yes, they are approximately monotone. The trend of loss would montonely decreasing. Because SGD would always give the direction which decreasing fast. The loss would decrease globally.
-  - Because stepsize sequence $\eta^j = {1 \over \lambda*j}$ and the $\lambda$ is on the denominator, when $\lambda$ is larger, the stepsize would small, and multiply the iteration number, the stepsize would smaller and smaller, it would be easier to be close the minimum.
-  - 
+  - No, the curves are not strictly monotone. Because in each iteration, the SGD for SoftSVM pick random data point to compute the subgradient, sometimes, it may pick a noice data point, the loss would larger than previous iteration; sometimes, it may pick a same point as previous iteration, the loss would be 0. And the subgradient is not only in convex function, it means that each point may exist more than one subgradient, so the direction would not decreasing direction in the global. Also, the stepsize also woud effect. Thus, it not monotone.
+  - Yes, they are approximately monotone. The trend of loss would montonely decreasing. Because gradient  method would always give the direction which decreasing fast. The loss would decrease globally.
+  - Because stepsize sequence $\eta^j = {1 \over \lambda*j}$ and the $\lambda$ is on the denominator, when $\lambda$ is larger, the stepsize would small, and multiply the iteration number, the stepsize would smaller and smaller, it would close to the minimum slower, it may need more iteration. However, if $\lambda $ is very small, stepsize would very big initially, so it would overstep, it may just go across the optimal solution and increase the loss.
+  - To find a linear predictor of minimal binary loss, we need try and modify the several different $\lambda$, and track the emprical binary loss observe the loss changing depand on different $\lambda$ 
 
 
 
+(e-f) Multi-class predictor
+
+`spiltDateset.m`
+
+```matlab
+function [D_1, D_2, D_3] = spiltDateset(D)
+[~,C] = size(D);
+% each spilt D into two part {-1,1}
+D_1 = D;
+D_1(D(:,C)==1, C) = 1;
+D_1(D(:,C)~=1, C) = -1;
+
+D_2 = D;
+D_2(D(:,C)==2, C) = 1;
+D_2(D(:,C)~=2, C) = -1;
+
+D_3 = D;
+D_3(D(:,C)==3, C) = 1;
+D_3(D(:,C)~=3, C) = -1;
+```
 
 
 
+| w    |            |            |            |            |            |            |            |            |
+| ---- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
+| w_1  | -0.4269014 | 0.62115023 | 0.12736926 | 0.19812147 | 0.28680462 | -0.8243152 | -0.5039022 | 0.11556033 |
+| w_2  | 1.85794872 | -1.5517094 | -0.2692863 | -0.7176838 | -0.3159829 | 0.12165556 | -0.2358803 | -0.3162393 |
+| w_3  | -1.1240345 | 0.51829771 | 0.08630371 | 0.31245969 | -0.0117023 | 0.75864604 | 0.51615673 | 0.12748406 |
 
+|             | w_1        | w_2        | w_3        |
+| ----------- | ---------- | ---------- | ---------- |
+| Binary Loss | 0.15238095 | 0.04285714 | 0.03809524 |
 
-
-
+Mutlti-class error: 17
 
 
 

@@ -17,9 +17,15 @@ clc;clear;close all;
 % and print empiral hinge loss and empiral binary loss
 % clc;clear;close all;
 % dataset = load_data("bg.txt");
+% 
+% % add bias
+% [N,C] = size(dataset);
+% bias = ones(N,1);
+% dataset = [dataset(:,1:C-1) bias dataset(:,C)];
+% 
 % num_updates = 300;
 % s_lambda = [100, 10, 1, .1, .01, .001];
-% n = 0;
+% n = 20;
 % 
 % for i = 1:length(s_lambda)
 %     [w,hi_loss,bi_loss] = soft_svm(dataset, num_updates, s_lambda(i), n);
@@ -52,28 +58,38 @@ clc;clear;close all;
 
 % load the dataset and spilt
 D = load('seeds_dataset.txt');
+% + bias
 [N,C] = size(D);
-[D_1, D_2, D_3] = spiltDateset(D);
-num_updates = 6000;
+bias = ones(N,1);
+D = [D(:,1:C-1) bias D(:,C)];
+
+[N,C] = size(D);
+[D_1, D_2, D_3] = spiltDateset(D); % split and add bias cloumn
+num_updates = 5000;
 lambda = 0.01;
 n = 1;
 binary_losses=zeros(3,1);
-ws = zeros(3,C-1);
+% ws = zeros(3,C-1);
+ws = zeros(3,C-1); % + bias
+
+
 min_loss = N;
+min_ws_loss = zeros(3,1);
 
 
-for i = 1:30
+for i = 1:50
     
-    [w_1,hi_loss_1,bi_loss_1] = soft_svm(D_1, num_updates, lambda, n);
-%     binary_losses(1) = emp_loss(w_1, D_1, 'binary');
+    [w_1,~,bi_loss_1] = soft_svm(D_1, num_updates, lambda, n);
+    binary_losses(1) = emp_loss(w_1, D_1, 'binary');
     ws(1,:) = w_1;
-    [w_2,hi_loss_2,bi_loss_2] = soft_svm(D_2, num_updates, lambda, n);
-%     binary_losses(2) = emp_loss(w_2, D_2, 'binary');
-    ws(2,:) = w_2;
-    [w_3,hi_loss_3,bi_loss_3] = soft_svm(D_3, num_updates, lambda, n);
-%     binary_losses(3) = emp_loss(w_3, D_3, 'binary');
-    ws(3,:) = w_3;
     
+    [w_2,~,bi_loss_2] = soft_svm(D_2, num_updates, lambda, n);
+    binary_losses(2) = emp_loss(w_2, D_2, 'binary');
+    ws(2,:) = w_2;
+    
+    [w_3,~,bi_loss_3] = soft_svm(D_3, num_updates, lambda, n);
+    binary_losses(3) = emp_loss(w_3, D_3, 'binary');
+    ws(3,:) = w_3;
     
     DR = D(:,C);
     for j = 1:N
@@ -87,6 +103,7 @@ for i = 1:30
     
     if (loss < min_loss)
         min_loss = loss;
+        min_ws_loss = binary_losses;
         opt_DR = DR;
         opt_ws = ws;
     end
@@ -95,7 +112,7 @@ for i = 1:30
     
     
 end
-    
-min_loss
+min_loss    
+min_loss/N
 
 
