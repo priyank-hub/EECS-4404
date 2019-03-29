@@ -95,16 +95,29 @@ Consider a neural network with one hidden layer containing two nodes, input dime
 
 - Solve:
   - $\mathcal{l}^2(N(·),(\pmb{x}, t))={1\over2}||N(x)-t||^2​$
-  - $\mathcal{l}^2(N(·),(\pmb{x}, t))={1\over2}||\sigma(\sigma(x_1w_{0,1,1}+x_2w_{0,1,2})w_{1,1,1}+\sigma(x_1w_{0,2,1}+x_2w_{0,2,2})w_{1,1,2})-t||^2$
+  - $\mathcal{l}^2(N(·),(\pmb{x}, t))={1\over2}||\sigma(\sigma(x_1w_{0,1,1}+x_2w_{0,1,2})w_{1,1,1}+\sigma(x_1w_{0,2,1}+x_2w_{0,2,2})w_{1,1,2})-t||^2​$
 
 
 
 **(c)** Consider the above expression of the loss as a function of the set of weights $L(w_{0,1,1}, w_{0,2,1}, w_{0,1,2}, w_{0,2,2}, w_{1,1,1}, w_{1,1,2}) = \mathcal{l}(N(·),(\pmb{x}, t))​$. Compute the 6 partial derivatives
 
 - Solve:
-  - ${\partial{L}\over\partial{w_{1,1,1}}}=(\sigma(\sigma(x_1w_{0,1,1}+x_2w_{0,1,2})w_{1,1,1}+\sigma(x_1w_{0,2,1}+x_2w_{0,2,2})w_{1,1,2})-t) (\sigma(\sigma(x_1w_{0,1,1}+x_2w_{0,1,2}))​$
-  - $=\sigma(\sigma(a_{1,1})w_{0,1,1}+\sigma(a_{1,2})w_{0,1,2}-t) \sigma(\sigma(a_{1,1})) = (\sigma(o_{1,1}w_{0,1,1} + o_{1,2}w_{0,1,2})-t)\sigma(o_{1,1})=(\sigma(a_{2,1})-t)\sigma(o_{1,1})$
-  - ${\partial{L}\over\partial{w_{1,1,2}}}=​$
+
+  - $\mathcal{l}^2(N(·),(\pmb{x}, t))={1\over2}||\sigma(\sigma(x_1w_{0,1,1}+x_2w_{0,1,2})w_{1,1,1}+\sigma(x_1w_{0,2,1}+x_2w_{0,2,2})w_{1,1,2})-t||^2​$
+
+    ​			$={1\over 2} ||\sigma(\sigma(a_{1,1})w_{1,1,1}+\sigma(a_{1,2})w_{1,1,2})-t||^2​$
+
+    ​			$= {1\over 2}||\sigma(o_{1,1}w_{1,1,1}+o_{1,2}w_{0,1,2})-t||^2$
+
+  - ${\partial{L}\over\partial{w_{1,1,1}}}=\sigma’(\sigma(x_1w_{0,1,1}+x_2w_{0,1,2})w_{1,1,1}+\sigma(x_1w_{0,2,1}+x_2w_{0,2,2})w_{1,1,2}) ((\sigma(x_1w_{0,1,1}+x_2w_{0,1,2})w_{1,1,1})' + (\sigma(x_1w_{0,2,1}+x_2w_{0,2,2})w_{1,1,2})')$
+
+    ​	$= \sigma'(o_{1,1}w_{1,1,1}+o_{1,2}w_{1,1,2})(0+\sigma(a_{1,1})+0+0)$
+
+    ​	$= \sigma'(a_{2,1})o_{1,1}$
+
+  - ${\partial{L}\over\partial{w_{1,1,2}}}=$
+
+  - 
 
 
 

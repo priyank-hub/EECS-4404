@@ -65,7 +65,7 @@ D = [D(:,1:C-1) bias D(:,C)];
 
 [N,C] = size(D);
 [D_1, D_2, D_3] = spiltDateset(D); % split and add bias cloumn
-num_updates = 5000;
+num_updates = 20000;
 lambda = 0.01;
 n = 1;
 binary_losses=zeros(3,1);
