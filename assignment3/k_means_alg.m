@@ -68,8 +68,7 @@ while 1
        neares_i = find(C(:,1)==i);
        centers(i,:) = mean(D(neares_i,:));
    end
-   
-   
+    
    % stop when centers are not uptated
    if isequal(old_centers,centers)
        break;
@@ -94,5 +93,5 @@ b_cost = 0;
 for i = 1:N
     b_cost = b_cost + norm(D(i,:) - centers(C(i,:),:));
 end
-cost = b_cost/N
+cost = b_cost/N;
     
