@@ -1,4 +1,4 @@
-function [C, cost] = k_means_alg(D,k,init,init_centers)
+function [C, cost] = k_means_alg_ori(D,k,init,init_centers)
 % N: the number of points
 % d: the dimension of each point
 [N, d] = size(D);
@@ -23,39 +23,26 @@ elseif (strcmpi(init, 'uniform'))
         centers(i,:) = D(j,:); % choose jth points uniformly at random
     end  
 elseif (strcmpi(init, 'euclidean'))
-   % 1st center
    j = unidrnd(N); % choose index j uniformly at random
    centers(1,:) = D(j,:); % choose jth points uniformly at random as first center   
-   % 2nd center
-   previous_point = centers(2,:); 
-   % cpmpute the eucliden distances
-   distances = zeros(N,1);      
-   for n_p = 1:N
-       distances(n_p,:) = norm(previous_point-D(n_p));
-   end    
-   % find the max distance point
-   max_i = find(distances==max(distances),1);   
-   % set this point as point
-   centers(2,:) = D(max_i,:);
-   % next centers
-   for i = 3:k
-       previous_centers = centers(1:i-1,:);
-       % cpmpute the sum of eucliden distances
+   for i = 2:k
+       previous_point = centers(i-1,:); 
+       
+       % cpmpute the eucliden distances
        distances = zeros(N,1);
-       [n_c,~]=size(previous_centers);
-       for c = 1:n_c
-           for n_p = 1:N
-               distances(n_p,:) = distances(n_p,:) + norm(previous_centers(n_c,:)-D(n_p,:));
-           end
+           
+       for n_p = 1:N
+           distances(n_p,:) = norm(previous_point-D(n_p));
        end
        
        % find the max distance point
        max_i = find(distances==max(distances),1);
        
        % set this point as point
-       centers(i,:) = D(max_i,:); 
+       centers(i,:) = D(max_i,:);   
    end
 end
+
 % repeat until convergence
 itr = 0;
 max_itr = 100;
@@ -107,4 +94,3 @@ for i = 1:N
     b_cost = b_cost + norm(D(i,:) - centers(C(i,:),:));
 end
 cost = b_cost/N;
-    
