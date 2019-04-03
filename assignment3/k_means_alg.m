@@ -27,33 +27,37 @@ elseif (strcmpi(init, 'euclidean'))
    j = unidrnd(N); % choose index j uniformly at random
    centers(1,:) = D(j,:); % choose jth points uniformly at random as first center   
    % 2nd center
-   previous_point = centers(2,:); 
-   % cpmpute the eucliden distances
-   distances = zeros(N,1);      
-   for n_p = 1:N
-       distances(n_p,:) = norm(previous_point-D(n_p));
-   end    
-   % find the max distance point
-   max_i = find(distances==max(distances),1);   
-   % set this point as point
-   centers(2,:) = D(max_i,:);
-   % next centers
-   for i = 3:k
-       previous_centers = centers(1:i-1,:);
-       % cpmpute the sum of eucliden distances
-       distances = zeros(N,1);
-       [n_c,~]=size(previous_centers);
-       for c = 1:n_c
-           for n_p = 1:N
-               distances(n_p,:) = distances(n_p,:) + norm(previous_centers(n_c,:)-D(n_p,:));
-           end
+   if k >= 2
+       previous_point = centers(2,:); 
+       % cpmpute the eucliden distances
+       distances = zeros(N,1);      
+       for n_p = 1:N
+           distances(n_p,:) = norm(previous_point-D(n_p));
        end
-       
        % find the max distance point
-       max_i = find(distances==max(distances),1);
-       
+       max_i = find(distances==max(distances),1);   
        % set this point as point
-       centers(i,:) = D(max_i,:); 
+       centers(2,:) = D(max_i,:);
+   end
+   % next centers
+   if k>= 3
+       for i = 3:k
+           previous_centers = centers(1:i-1,:);
+           % cpmpute the sum of eucliden distances
+           distances = zeros(N,1);
+           [n_c,~]=size(previous_centers);
+           for c = 1:n_c
+               for n_p = 1:N
+                   distances(n_p,:) = distances(n_p,:) + norm(previous_centers(c,:)-D(n_p,:));
+               end
+           end
+           
+           % find the max distance point
+           max_i = find(distances==max(distances),1);
+           
+           % set this point as point
+           centers(i,:) = D(max_i,:); 
+       end
    end
 end
 % repeat until convergence
