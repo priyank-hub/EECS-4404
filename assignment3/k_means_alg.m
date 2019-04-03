@@ -1,4 +1,4 @@
-function [C, cost] = k_means_alg(D,k,init,init_centers)
+function [C, cost, init_c] = k_means_alg(D,k,init,init_centers)
 % N: the number of points
 % d: the dimension of each point
 [N, d] = size(D);
@@ -60,6 +60,9 @@ elseif (strcmpi(init, 'euclidean'))
        end
    end
 end
+% store inital centers
+init_c = zeros(k, d);
+init_c = centers;
 % repeat until convergence
 itr = 0;
 max_itr = 100;
@@ -108,7 +111,7 @@ end
 % end
 b_cost = 0;
 for i = 1:N
-    b_cost = b_cost + norm(D(i,:) - centers(C(i,:),:));
+    b_cost = b_cost + norm(D(i,:) - centers(C(i,:),:))^2;
 end
 cost = b_cost/N;
     

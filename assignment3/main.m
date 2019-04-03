@@ -20,16 +20,20 @@
 % init = 'euclidean';
 % 
 % % % init by hand
-%  init_centers = zeros(k,d);
+% init_centers = zeros(k,d);
 % % init_centers(1,:)=[0.04607 4.565];
 % % init_centers(2,:)=[-3.983 -3.781];
 % % init_centers(3,:)=[2.993 -2.907];
 % 
+% % init_centers(1,:)=[2.0188 3.574];
+% % init_centers(2,:)=[2.181 4.6575];
+% % init_centers(3,:)=[3.5908 4.5265];
+% 
 % % clustering
-% [cluster_i,~] = k_means_alg(twoD,k,init,init_centers);
+% [cluster_i,~,init_c] = k_means_alg(twoD,k,init,init_centers);
 % 
 % % plot clustering in different color
-% colors = {'green', 'blue','black','yellow','red','magenta','cyan'};
+% colors = {'green', 'blue','black','red','magenta','yellow','cyan'};
 % %colors = zeros(k,3);
 % % % set color
 % % for i = 1:k
@@ -39,10 +43,12 @@
 % figure(2)
 % %subplot(1,2,2);
 % % if inti by hand plot init center
-% if isequal(init,'manual')
-%     plot(init_centers(:,1), init_centers(:,2), 'r*', 'MarkerSize', 12);
-%     hold on
-% end
+% % if isequal(init,'manual')
+% %     plot(init_centers(:,1), init_centers(:,2), 'r*', 'MarkerSize', 12);
+% %     hold on
+% % end
+% plot(init_c(:,1), init_c(:,2), 'r*', 'MarkerSize', 12);
+% hold on
 % for i = 1:k
 %     hold on;
 %     %plot(x(find(cluster_i==i,N)),t(find(cluster_i==i,N)),'.','Color',colors(i,:),'MarkerSize', 10);
@@ -95,7 +101,7 @@
 %     
 % end
 % plot(costs)
-
+% 
 % % load data
 % threeD=load('threedpoints.txt');
 % [N, d] = size(threeD);
@@ -109,6 +115,7 @@
 % %subplot(1,2,1);
 % plot3(x, y, z,'r.', 'MarkerSize', 10);
 % title('origin dataset');
+% grid on
 % 
 % %pause;
 % 
@@ -117,7 +124,7 @@
 % init = 'euclidean';
 % 
 % % clustering
-% [cluster_i,~] = k_means_alg(threeD,k,init,init_centers);
+% [cluster_i,~, init_c] = k_means_alg(threeD,k,init,init_centers);
 % 
 % % plot clustering in different color
 % colors = {'green', 'blue','black','red','cyan','magenta','yellow'};
@@ -128,6 +135,8 @@
 % % end
 % 
 % figure(2)
+% plot3(init_c(:,1), init_c(:,2), init_c(:,3), 'r*', 'MarkerSize', 12);
+% hold on
 % k
 % for i = 1:k
 %     colors{i}
@@ -135,12 +144,13 @@
 %     %plot(x(find(cluster_i==i,N)),t(find(cluster_i==i,N)),'.','Color',colors(i,:),'MarkerSize', 10);
 %     plot3(x(find(cluster_i==i),1),y(find(cluster_i==i),1), z(find(cluster_i==i),1),'.','color',colors{i},'MarkerSize', 10);
 % end
+% grid on
 % title('clustering');
 % fprintf('finish! plz enter!')
 % pause;
 
-% (f) Load the UCI ?seeds? dataset from the last assignment and repeat the above step.
-
+% % (f) Load the UCI ?seeds? dataset from the last assignment and repeat the above step.
+% 
 % clc;clear;close all;
 % % load data
 % seedD=load('seeds_dataset.txt');
@@ -162,6 +172,7 @@
 % plot(costs)
 
 % % load data
+% clc;clear;close all;
 % seedD=load('seeds_dataset.txt');
 % [~, d] = size(seedD);
 % % % init centers
@@ -171,6 +182,7 @@
 % %     init_centers(i,:) = D(unidrnd(70),1:d-1);
 % % end
 % % remove last col
+% label=seedD(:,d);
 % seedD=seedD(:,1:d-1);
 % [N, d] = size(seedD);
 % % set k clusters, and init method
@@ -186,48 +198,44 @@
 % % init_centers(2,:)=[16.84 15.67 0.8623 5.998 3.484 4.675 5.877];
 % % init_centers(3,:)=[11.21 13.13 0.8167 5.279 2.687 6.169 5.275];
 % 
-% init_centers
-% % clustering
-% [cluster_i,cost] = k_means_alg(seedD,k,init,0);
-% cost
-% 
+% min_loss = realmax;
+% for i = 1:500
+%     % clustering
+%     [cluster_i,~, ~] = k_means_alg(seedD,k,init,0);
+%     Diff = label ~= cluster_i;
+%     loss = sum(Diff);
+%     
+%     if loss < min_loss
+%         min_loss = loss;
+%         opt_classifier = cluster_i;
+%     end
+% end
+% min_loss
+% opt_classifier;
 
 clc;clear;close all;
-% x = rand(100,1)
-% t = rand(100,1)
-% D = horzcat(x,t)
-% save D
 
-load D
-x = D(:,1);
-t = D(:,2);
-plot(x,t,'r.','MarkerSize', 10)
+x = [1 1 5 3];
+t = [1 2 1 2];
+D = [x',t'];
+D
+plot(x,t,'r.','MarkerSize', 20)
 % set k clusters, and init method
 k = 2;
-init = 'euclidean';
+init = 'uniform';
 
 % clustering
-[cluster_i,~] = k_means_alg(D,k,init,0);
+[cluster_i,~,init_c] = k_means_alg(D,k,init,0);
 
 % plot clustering in different color
-colors = {'green', 'blue','black','yellow','red','magenta','cyan'};
-%colors = zeros(k,3);
-% % set color
-% for i = 1:k
-%     colors(i,:) = rand(1,3);
-% end
+colors = {'blue','red'};
 
 figure(2)
-%subplot(1,2,2);
-% if inti by hand plot init center
-if isequal(init,'manual')
-    plot(init_centers(:,1), init_centers(:,2), 'r*', 'MarkerSize', 12);
-    hold on
-end
+plot(init_c(:,1), init_c(:,2), 'r*', 'MarkerSize', 12);
+hold on
 for i = 1:k
     hold on;
-    %plot(x(find(cluster_i==i,N)),t(find(cluster_i==i,N)),'.','Color',colors(i,:),'MarkerSize', 10);
-    plot(x(find(cluster_i==i),1),t(find(cluster_i==i),1),'.','color',colors{i},'MarkerSize', 10);
+    plot(x(find(cluster_i==i)),t(find(cluster_i==i)),'.','color',colors{i},'MarkerSize', 20);
 end
 title('clustering');
 
