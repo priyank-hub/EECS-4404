@@ -66,24 +66,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 **1. Backpropagation **
 
 Consider a neural network with one hidden layer containing two nodes, input dimension 2 and output dimension 1. That is, the fist layer contains two nodes $v_{0,1}$, $v_{0,2}$, the hidden layer has two nodes $v_{1,1}$, $v_{1,2}$, and the output layer one nodes $v_{2,1}$. All nodes between consecutive layers are connected by an edge. The weights between node $v_{t,i} $and$ v_{t+1,j}$  is denoted by $w_{t,j,i}$ as (partially) indicated here: <u>The nodes in the middle layer apply a differentiable activation function $\sigma$ : $\R→ \R$, which has derivative $\sigma'$.</u>
@@ -165,11 +147,11 @@ Consider a neural network with one hidden layer containing two nodes, input dime
      j = unidrnd(N); % choose index j uniformly at random
      centers(1,:) = D(j,:); % choose jth points uniformly at random as first center   
      % 2nd center
-     previous_point = centers(2,:); 
+     previous_point = centers(1,:); 
      % cpmpute the eucliden distances
      distances = zeros(N,1);      
      for n_p = 1:N
-         distances(n_p,:) = norm(previous_point-D(n_p));
+         distances(n_p,:) = norm(previous_point-D(n_p,:));
      end    
      % find the max distance point
      max_i = find(distances==max(distances),1);   
@@ -368,7 +350,49 @@ Which number of clusters do you think would be suitable from looking at the poin
 
 **(g)** Design a simple (two-dimensional) dataset where the 2-means algorithm with the third initialization method will always fail to find the optimal 2-means clustering. Explain why it will fail on your example or provide plots of the data with initializations and costs that show that 2-means converges to a suboptimal clustering.
 
-- 
+- ```matlab
+  clc;clear;close all;
+  
+  x = [0 6 2 4];
+  t = [0 0 5 5];
+  D = [x',t'];
+  figure(1)
+  plot(x,t,'r.','MarkerSize', 20)
+  % set k clusters, and init method
+  k = 2;
+  init = 'euclidean';
+  % clustering
+  [cluster_i,cost,init_c] = k_means_alg(D,k,init,0);
+  % plot clustering in different color
+  colors = {'blue','red'};
+  figure(2)
+  plot(init_c(:,1), init_c(:,2), 'r*', 'MarkerSize', 12);
+  hold on
+  for i = 1:k
+      hold on
+   plot(x(find(cluster_i==i)),t(find(cluster_i==i)),'.','color',colors{i},'MarkerSize', 20);
+  end
+  title('clustering');
+  cost
+  ```
+
+- Fig g.1<img src="./fig/g-origin.png" style="zoom:50%"/>
+
+- We choose dataset $D=\{(0,0),(6,0),(2,5),(4,5)\}​$ like plot above (fig g.1).
+
+- Fig g.2<img src="./fig/g-right-cluster.png" style="zoom:50%"/> 
+
+- When we use first or second method, we can got minimal $cost = 5$, and cluster like above (fig g.2)
+
+- **However**, when we **use third approace** to initialize the centres, we always got the cost is larger than $5​$, the plot like fig g.3 ($cost=7.25 ​$) or fig g.4 ($cost=6.17​$) which always fail to find the optimal 2-means clustering.
+
+- Fig g.3<img src="./fig/g-miss.png" style="zoom:50%"/>
+
+- Fig g.4<img src="./fig/g-miss-2.png" style="zoom:50%"/>
+
+-  The reason is the third approach would always initial second centre such that far away the first centre. Thus, in 2-mean clustering, second centre position would be effected by first centre position. In our dataset, $A(0,0)$, $B(6,0)$, $C (2,5)$, $D(4,5)$, $AD$ and $BC$ are longest. in a satuation, when it choose C as first center, it must choose B as second center. B would cluster the nearse point D, and C would cluster the neatest point A (fig g.3) $cost=7.25$, which faile to find optimal culster ($cost_{opt} = 5$). On the ohter senario when it choose D as first centre, it also choose A as second centre. For now, D is near B and C, so clustering them (fig g.4) $cost=6.1667$, which faile to optimal cluster ($cost_{opt} = 5​$).
+
+- Because the number of clusters is too few only 2-mean, and in this dataset some distance would same, it hard to get optimal clustering. We can initial first centre uniformly random choose in a real number area, rather than in dataset. Such way, would decrease the secetive with first centre initiallized.
 
 
 

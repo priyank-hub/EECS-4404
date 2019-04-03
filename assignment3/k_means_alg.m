@@ -28,11 +28,11 @@ elseif (strcmpi(init, 'euclidean'))
    centers(1,:) = D(j,:); % choose jth points uniformly at random as first center   
    % 2nd center
    if k >= 2
-       previous_point = centers(2,:); 
+       previous_point = centers(1,:);
        % cpmpute the eucliden distances
        distances = zeros(N,1);      
        for n_p = 1:N
-           distances(n_p,:) = norm(previous_point-D(n_p));
+           distances(n_p,:) = norm(previous_point-D(n_p,:));
        end
        % find the max distance point
        max_i = find(distances==max(distances),1);   
